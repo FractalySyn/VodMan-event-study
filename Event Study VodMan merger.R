@@ -1,8 +1,14 @@
-install.packages(readxl); install.packages(tidyverse); install.packages(fBasics)
-library(readxl); library(tidyverse); library(fBasics)
+rm(list=ls())
+
+install.packages("readxl"); install.packages("tidyverse"); install.packages("fBasics")
+install.packages("ggplot2"); install.packages("httr")
+library(readxl); library(tidyverse); library(fBasics); library(ggplot2); library(httr)
 
 
 # Data --------------------------------------------------------------
+
+link = "https://github.com/FractalySyn/VodMan-event-study/raw/master/datavodman.xlsx"
+download.file(link, "datavodman.xlsx", mode = "wb")
 
 chart = function(data, vec1, vec2)
 {
@@ -15,11 +21,11 @@ chart = function(data, vec1, vec2)
 }
 
 ## Mannesmann
-datam = read_excel(path = "C:/Users/Admin/Google Drive/S6/Recherche/Vod-Man/datavodman.xlsx", sheet = "estimationM") %>% as.data.frame()
+datam = read_excel(path = "datavodman.xlsx", sheet = "estimationM") %>% as.data.frame()
 chart(datam, mannesmann, dax)
 
 ## Vodafone
-datav = read_excel(path = "C:/Users/Admin/Google Drive/S6/Recherche/Vod-Man/datavodman.xlsx", sheet = "estimationV") %>% as.data.frame()
+datav = read_excel(path = "datavodman.xlsx", sheet = "estimationV") %>% as.data.frame()
 chart(datav, vodafone, footsie)
 
 # Null returns analysis Mannesmann --------------------------------------------------------------
@@ -119,13 +125,13 @@ class(a); length(a);
 t(a); a
 
 ## CAPM Mannesmann ~ dax 12/05/98 - 15/10/99
-datam = read_excel(path = "C:/Users/Admin/Google Drive/S6/Recherche/Vod-Man/datavodman.xlsx", sheet = "estimationM") %>% as.data.frame()
+datam = read_excel(path = "datavodman.xlsx", sheet = "estimationM") %>% as.data.frame()
 datam0 = datam[-which(datam$mannesmann == 0),]
 market_model(datam0, mannesmann, dax, plot = T)
 # -> beta 0.682696 signficant at more than 99.99% confidence level
 
 ## CAPM Vodafone ~ footsie 15/10/98 - 15/10/99
-datav = read_excel(path = "C:/Users/Admin/Google Drive/S6/Recherche/Vod-Man/datavodman.xlsx", sheet = "estimationV") %>% as.data.frame()
+datav = read_excel(path = "datavodman.xlsx", sheet = "estimationV") %>% as.data.frame()
 market_model(datav, vodafone, footsie, plot = T)
 # -> beta 1.247092 signficant at more than 99.99% confidence level
 
@@ -161,12 +167,12 @@ null_events = function(event_data, events)
 }
 
 ## Mannessmann
-ewm = read_excel(path = "C:/Users/Admin/Google Drive/S6/Recherche/Vod-Man/datavodman.xlsx", sheet = "eventwindowM") %>% as.data.frame()
+ewm = read_excel(path = "datavodman.xlsx", sheet = "eventwindowM") %>% as.data.frame()
 null_events(ewm, event_list_mann)
 # there's a null return on 10 jan 2000 -> is it an important date ?
 
 ## Vodafone
-ewv = read_excel(path = "C:/Users/Admin/Google Drive/S6/Recherche/Vod-Man/datavodman.xlsx", sheet = "eventwindowV") %>% as.data.frame()
+ewv = read_excel(path = "datavodman.xlsx", sheet = "eventwindowV") %>% as.data.frame()
 null_events(ewv, event_list)
 # there's no null returns for vodafone on the event window
 
@@ -199,9 +205,9 @@ temporal_stability = function(data1, data2)
 }
 
 ## Mannesmann
-ewm = read_excel(path = "C:/Users/Admin/Google Drive/S6/Recherche/Vod-Man/datavodman.xlsx", sheet = "eventwindowM") %>% as.data.frame()
+ewm = read_excel(path = "datavodman.xlsx", sheet = "eventwindowM") %>% as.data.frame()
 ewm0 = ewm[-which(ewm$mannesmann == 0),]
-datam = read_excel(path = "C:/Users/Admin/Google Drive/S6/Recherche/Vod-Man/datavodman.xlsx", sheet = "estimationM") %>% as.data.frame()
+datam = read_excel(path = "datavodman.xlsx", sheet = "estimationM") %>% as.data.frame()
 datam0 = datam[-which(datam$mannesmann == 0),]
 
 # Chow test
@@ -213,8 +219,8 @@ temporal_stability(datam0, ewm0)
 
 
 ## Vodafone
-ewv = read_excel(path = "C:/Users/Admin/Google Drive/S6/Recherche/Vod-Man/datavodman.xlsx", sheet = "eventwindowV") %>% as.data.frame()
-datav = read_excel(path = "C:/Users/Admin/Google Drive/S6/Recherche/Vod-Man/datavodman.xlsx", sheet = "estimationV") %>% as.data.frame()
+ewv = read_excel(path = "datavodman.xlsx", sheet = "eventwindowV") %>% as.data.frame()
+datav = read_excel(path = "datavodman.xlsx", sheet = "estimationV") %>% as.data.frame()
 
 # Chow test
 # Fisher statistic (calculated) : F = [(SCRc - (SCR1+SCR2)) / (dfc - (df1+df2))] / [(SCR1 + SCR2) / (df1 + df2)], k = 2 (alpha, beta)
@@ -243,12 +249,12 @@ error_analysis = function(data, vec1, vec2)
 
 ## Mannesmann
 # Estimation Window 
-datam = read_excel(path = "C:/Users/Admin/Google Drive/S6/Recherche/Vod-Man/datavodman.xlsx", sheet = "estimationM") %>% as.data.frame()
+datam = read_excel(path = "datavodman.xlsx", sheet = "estimationM") %>% as.data.frame()
 datam0 = datam[-which(datam$mannesmann == 0),]
 error_analysis(datam0, mannesmann, dax)
 
 # Event window
-ewm = read_excel(path = "C:/Users/Admin/Google Drive/S6/Recherche/Vod-Man/datavodman.xlsx", sheet = "eventwindowM") %>% as.data.frame()
+ewm = read_excel(path = "datavodman.xlsx", sheet = "eventwindowM") %>% as.data.frame()
 ewm0 = ewm[-which(ewm$mannesmann == 0),]
 error_analysis(ewm0, mannesmann, dax)
 
@@ -261,11 +267,11 @@ error_analysis(alldatam, mannesmann, dax)
 
 ## Vodafone
 # Estimation Window
-datav = read_excel(path = "C:/Users/Admin/Google Drive/S6/Recherche/Vod-Man/datavodman.xlsx", sheet = "estimationV") %>% as.data.frame()
+datav = read_excel(path = "datavodman.xlsx", sheet = "estimationV") %>% as.data.frame()
 error_analysis(datav, vodafone, footsie)
 
 # Event window
-ewv = read_excel(path = "C:/Users/Admin/Google Drive/S6/Recherche/Vod-Man/datavodman.xlsx", sheet = "eventwindowV") %>% as.data.frame()
+ewv = read_excel(path = "datavodman.xlsx", sheet = "eventwindowV") %>% as.data.frame()
 error_analysis(ewv, vodafone, footsie)
 
 # Whole data
@@ -525,38 +531,6 @@ event_study(datav, ewv, period_vod, "b-one", bootstrap_X)
 ## Phases
 # To define
 
-# Chi-squared ------------------------------------------------------------------
-
-
-# Pearson's Chi-squared - goodness to fit    // at leat 5 obs for each class
-datam = read_excel(path = "C:/Users/Admin/Google Drive/S6/Recherche/Vod-Man/datavodman.xlsx", sheet = "estimationM")
-datam0 = datam[-which(datam$mannesmann == 0),]; attach(datam0)
-regmd0 = lm(mannesmann~dax); cf = coef(regmd0)
-error = data.frame(res = mannesmann - (cf[1] + cf[2] * dax))
-res_emp = error$res; avg = mean(res_emp)
-res_emp = res_emp %>% sort() %>% as.data.frame()
-len = length(res_emp$.); std = sqrt((len/(len-1) * sd(res_emp$.)^2))
-eff = c(sum(res_emp < -0.04), sum(res_emp < -0.02 & res_emp >= -0.04), sum(res_emp < -0.01 & res_emp >= -0.02),
-        sum(res_emp < 0 & res_emp >= -0.01), sum(res_emp < 0.01 & res_emp >= 0), sum(res_emp < 0.03 & res_emp >= 0.01),
-        sum(res_emp < 0.16 & res_emp >= 0.03))
-proba = c(pnorm(-0.04, avg, std), pnorm(-0.02, avg, std) - pnorm(-0.04, avg, std), pnorm(-0.01, avg, std) - pnorm(-0.02, avg, std), 
-          pnorm(0, avg, std) - pnorm(-0.01, avg, std), pnorm(0.01, avg, std) - pnorm(0, avg, std),
-          pnorm(0.03, avg, std) - pnorm(0.01, avg, std), 1 - pnorm(0.03, avg, std))
-theo_eff = len * proba
-# Test statistic
-dist = eff - theo_eff
-d2 = sum(dist^2 / theo_eff); d2
-# follows a chi-squared of k-r-1 df - k classes, r estimated parameters (mean/sd)
-qchisq(0.9, 4)
-
-
-
-
-lis <- list(c("Jan","Feb","Mar"), matrix(c(3,9,5,1,-2,8), nrow = 2),
-                  list("green",12.3))
-lis
-class(lis[[1]])
-lis[[1]][2]
 
 
 
